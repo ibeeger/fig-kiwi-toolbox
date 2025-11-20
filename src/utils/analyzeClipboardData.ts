@@ -39,6 +39,9 @@ export const analyzeClipboardData = (clipboardData: string) => {
   // match figmeta
   const base64MetaRegex = /<!--\(figmeta\)(.+)\(\/figmeta\)-->/;
   const base64MetaMatches = clipboardData.match(base64MetaRegex);
+
+  console.log('base64MetaMatches', base64MetaMatches);
+
   if (base64MetaMatches?.length === 2) {
     analyzed.base64Meta = base64MetaMatches[1];
   }
