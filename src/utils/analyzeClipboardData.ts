@@ -32,15 +32,22 @@ export const analyzeClipboardData = (clipboardData: string) => {
     decodedData: {} as Message,
   };
 
+  // console.log('base64MetaMatches', clipboardData);
+
   if (!clipboardData) {
     return analyzed;
   }
 
   // match figmeta
   const base64MetaRegex = /<!--\(figmeta\)(.+)\(\/figmeta\)-->/;
-  const base64MetaMatches = clipboardData.match(base64MetaRegex);
+  let base64MetaMatches = clipboardData.match(base64MetaRegex);
 
-  console.log('base64MetaMatches', base64MetaMatches);
+  // console.log('base64MetaMatches', base64MetaMatches);
+
+  if(!base64MetaMatches) {
+   let _base64MetaRegex = /&lt;!--\(figmeta\)(.+)\(\/figmeta\)--&gt;/;
+    base64MetaMatches = clipboardData.match(_base64MetaRegex);
+  }
 
   if (base64MetaMatches?.length === 2) {
     analyzed.base64Meta = base64MetaMatches[1];
@@ -51,7 +58,13 @@ export const analyzeClipboardData = (clipboardData: string) => {
 
   // match figma
   const base64FigRegex = /<!--\(figma\)(.+)\(\/figma\)-->/;
-  const base64FigMatches = clipboardData.match(base64FigRegex);
+  let base64FigMatches = clipboardData.match(base64FigRegex);
+
+  if(!base64FigMatches) {
+    let _base64FigRegex = /&lt;!--\(figma\)(.+)\(\/figma\)--&gt;/;
+    base64FigMatches = clipboardData.match(_base64FigRegex);
+  }
+
   if (base64FigMatches?.length === 2) {
     analyzed.base64Fig = base64FigMatches[1];
   }

@@ -61,6 +61,8 @@ const _exportedFig = atom(
 const exportedFigLastUpdated = atom<Date>(new Date());
 const exportedFig = atom((get) => get(_exportedFig));
 
+console.log('_exportedFig', exportedFig)
+
 export const atoms = {
   clipboardData,
   clipboardFig,

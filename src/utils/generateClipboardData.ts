@@ -35,21 +35,43 @@ export const generateClipboardData = (
   decodedMeta.pasteID = 0;
 
   //STUB - type with pre-extracted schema
-  generated.encodedModifiedData = schema.encodeMessage(data);
+  generated.encodedModifiedData = new Uint8Array(schema.encodeMessage(data));
 
   // write binary fig data
-  const toExport = [...uint8FigHeader];
-  toExport.push(...struct.pack('<I', schemaSize));
-  toExport.push(...compressedSchema);
-  generated.compressedModifiedData = pako.deflateRaw(
+  generated.compressedModifiedData = new Uint8Array(pako.deflateRaw(
     generated.encodedModifiedData,
-  );
-  toExport.push(...struct.pack('<I', generated.compressedModifiedData.length));
-  toExport.push(...generated.compressedModifiedData);
+  ));
+  
+  // Calculate total size
+  const schemaSizePacked = struct.pack('<I', schemaSize);
+  const compressedSizePacked = struct.pack('<I', generated.compressedModifiedData.length);
+  const totalSize = uint8FigHeader.length + schemaSizePacked.length + compressedSchema.length + 
+                    compressedSizePacked.length + generated.compressedModifiedData.length;
+  
+  // Use Uint8Array to avoid stack overflow
+  const toExport = new Uint8Array(totalSize);
+  let offset = 0;
+  
+  toExport.set(uint8FigHeader, offset);
+  offset += uint8FigHeader.length;
+  
+  toExport.set(schemaSizePacked, offset);
+  offset += schemaSizePacked.length;
+  
+  toExport.set(compressedSchema, offset);
+  offset += compressedSchema.length;
+  
+  toExport.set(compressedSizePacked, offset);
+  offset += compressedSizePacked.length;
+  
+  toExport.set(generated.compressedModifiedData, offset);
+  
   const exported = Buffer.from(toExport);
 
   // create base64 fig data
   generated.exportedData = exported.toString('base64');
+
+  console.log('decodedMeta', generated);
 
   // generate the clipboard data
   generated.exportedClipboardData = `<meta charset='utf-8'><meta charset="utf-8"><span data-metadata="<!--(figmeta)${Buffer.from(

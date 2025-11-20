@@ -10,7 +10,7 @@ type EncodeFigNode = Node<NodeData>;
 
 export const EncodeFigNode = ({}: NodeProps<NodeData>) => {
   const [exportedFig] = useAtom(atoms.exportedFig);
-
+  console.log('Render EncodeFigNode', exportedFig.encodedModifiedData.length);
   return (
     <div className="flex flex-col bg-white border rounded-lg shadow w-72 nowheel cursor-grab border-slate-300">
       <div className="px-3 py-2 border-b border-slate-300">

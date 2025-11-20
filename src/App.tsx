@@ -119,13 +119,14 @@ const App = () => {
     <div style={{ width: '100vw', height: '100vh' }}>
       <EditorPane />
       <ReactFlow
+        
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         className="bg-slate-100"
         nodeTypes={nodeTypes}
-        defaultViewport={{ x: 60, y: 40, zoom: 1 }}
+        defaultViewport={{ x: 60, y: 40, zoom: .75 }}
         proOptions={{ hideAttribution: true }}
       >
         <Controls className="bg-white" />
